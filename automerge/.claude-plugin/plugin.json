@@ -1,0 +1,6 @@
+{
+  "name": "automerge",
+  "version": "1.0.0",
+  "description": "Installs a scheduled workflow that squash-merges open PRs that are old enough, clean, and unlabelled. One script, three idempotent steps, one manual merge at the end.",
+  "author": { "name": "Jared Waxman" }
+}

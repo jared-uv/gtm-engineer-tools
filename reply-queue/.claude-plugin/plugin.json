@@ -1,0 +1,6 @@
+{
+  "name": "reply-queue",
+  "version": "0.1.0",
+  "description": "One pass over every live outbound campaign, ending in a queue of cards with the reply already drafted. Drafts everywhere it can, sends nowhere.",
+  "author": { "name": "Jared Waxman" }
+}

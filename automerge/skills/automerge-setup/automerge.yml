@@ -1,0 +1,100 @@
+# Merge open PRs on a timer, so they stop piling up.
+#
+# Every 30 minutes: squash-merge every open PR that is at least 15 minutes old,
+# has no merge conflict, is not a draft, carries no `hold` label, and has no
+# failing or pending check. Conflicted PRs are skipped and left for a person,
+# with the reason in the run log. Nothing here rebases or resolves anything.
+#
+# Why a workflow and not GitHub's own auto-merge: that needs branch protection,
+# which private repos on the free plan don't get.
+#
+# Squash keeps the "<title> (#N)" history this repo already has. Branch cleanup
+# is the repo setting delete_branch_on_merge, not a flag here, so a manual
+# merge cleans up the same way.
+#
+# To keep a PR open past the window: add the `hold` label, or mark it draft.
+# To run on demand: Actions → Auto-merge → Run workflow.
+
+name: Auto-merge
+
+on:
+  schedule:
+    - cron: '*/30 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+  checks: read      # statusCheckRollup is unreadable without these two,
+  statuses: read    # and the first run failed on exactly that
+
+concurrency:
+  group: automerge
+  cancel-in-progress: false
+
+jobs:
+  merge:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+      REPO: ${{ github.repository }}
+      MIN_AGE_MINUTES: 15
+    steps:
+      - name: Merge PRs that are old enough and clean
+        run: |
+          set -euo pipefail
+          cutoff=$(( $(date -u +%s) - MIN_AGE_MINUTES * 60 ))
+
+          gh pr list --repo "$REPO" --state open --limit 100 \
+            --json number,title,createdAt,isDraft,labels,headRefName \
+            --jq '.[]
+                  | select(.isDraft | not)
+                  | select(([.labels[].name] | index("hold")) | not)
+                  | [.number, .createdAt, .headRefName, .title] | @tsv' \
+          | while IFS=$'\t' read -r num created head title; do
+              if [ "$(date -u -d "$created" +%s)" -gt "$cutoff" ]; then
+                echo "skip  #$num  opened under ${MIN_AGE_MINUTES} min ago"
+                continue
+              fi
+
+              # Mergeability is recomputed by GitHub after every merge on main,
+              # so read it fresh for each PR and wait out UNKNOWN briefly.
+              # A failed query leaves the fields empty, which reads as "not
+              # clean" below: the PR is skipped and named, the run goes on.
+              mergeable=UNKNOWN; mstate=UNKNOWN; unresolved=0
+              for _ in 1 2 3 4 5 6; do
+                IFS=$'\t' read -r mergeable mstate unresolved < <(
+                  gh pr view "$num" --repo "$REPO" \
+                    --json mergeable,mergeStateStatus,statusCheckRollup \
+                    --jq '[ .mergeable,
+                            .mergeStateStatus,
+                            ([ .statusCheckRollup[]? | (.conclusion // .state) ]
+                              | map(select(. != "SUCCESS" and . != "SKIPPED" and . != "NEUTRAL"))
+                              | length) ] | @tsv' || true
+                ) || true
+                [ "${mergeable:-}" != "UNKNOWN" ] && break
+                sleep 10
+              done
+              unresolved="${unresolved:-0}"
+
+              if [ "$mergeable" = "CONFLICTING" ]; then
+                echo "skip  #$num  has a merge conflict, left for a person: $title"
+                continue
+              fi
+              if [ "$mergeable" != "MERGEABLE" ] || [ "$mstate" != "CLEAN" ]; then
+                echo "skip  #$num  not clean yet (mergeable=$mergeable state=$mstate)"
+                continue
+              fi
+              if [ "$unresolved" -gt 0 ]; then
+                echo "skip  #$num  $unresolved check(s) pending or failing"
+                continue
+              fi
+
+              echo "merge #$num  $title"
+              gh pr merge "$num" --repo "$REPO" --squash
+              # delete_branch_on_merge does not fire for merges made with the
+              # Actions token (observed 2026-09-09), so delete explicitly.
+              gh api -X DELETE "repos/$REPO/git/refs/heads/$head" --silent \
+                && echo "      deleted branch $head" \
+                || echo "      branch $head not deleted (already gone, or protected)"
+            done
