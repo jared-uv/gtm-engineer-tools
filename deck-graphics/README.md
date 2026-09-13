@@ -70,6 +70,7 @@ That look is what makes the result trustworthy. The chain degrades instead of fa
 ## What the logo chain has learned
 
 - Brandfetch answers in WebP, which python-pptx can't embed; it goes through Chrome to PNG. Its `theme/dark` variants still ship some marks on an opaque white square, so the white ground is flood-filled away from the corners (white inside the mark stays). It resolves Google subdomains to the plain G, and has some vendors only as a wordmark.
+- Removing a white ground leaves the anti-aliased edge behind: pixels that were the mark blended with white, which read as a pale halo on a dark slide. The knockout now defringes a 2-px ring along the new edge, turning the whiteness into transparency and un-blending the color. It helps; an SVG is still better. When a household mark has a halo, pin its SVG with `url` (Wikimedia Commons has Slack, Gmail, Google Calendar and Drive) and nothing needs knocking out at all.
 - SimpleIcons' CDN has dropped marks the npm package still ships (OpenAI, Slack). The package on jsDelivr is the fallback, with a fill painted on.
 - Google's favicon service always answers, which means it will answer with some other site's icon for a domain behind a bot challenge. A 32-px result is a 32-px result; say so rather than upscale.
 - `url` pins a source when the chain gets a mark wrong. Wikimedia Commons SVGs cover most household marks.

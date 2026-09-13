@@ -163,6 +163,20 @@ if HAVE_PIL:
     check("white inside the mark stays", o.getpixel((30, 30)) == (255, 255, 255, 255))
     out2, cut2 = common.knockout_white(png_bytes(8, 8, (0, 0, 0, 0)))
     check("transparent input is left alone", not cut2 and out2 == png_bytes(8, 8, (0, 0, 0, 0)))
+    # the anti-aliased edge: a red square whose outer 1-px border is red blended half with white
+    im = Image.new("RGBA", (64, 64), (255, 255, 255, 255))
+    for x in range(20, 44):
+        for y in range(20, 44): im.putpixel((x, y), (200, 0, 0, 255))
+    for x in range(20, 44):
+        for y in (20, 43): im.putpixel((x, y), (227, 127, 127, 255))
+    for y in range(20, 44):
+        for x in (20, 43): im.putpixel((x, y), (227, 127, 127, 255))
+    buf = io.BytesIO(); im.save(buf, "PNG")
+    o = Image.open(io.BytesIO(common.knockout_white(buf.getvalue())[0])).convert("RGBA")
+    edge, inner = o.getpixel((20, 30)), o.getpixel((30, 30))
+    check("the pale edge becomes part-transparent", 100 <= edge[3] <= 160, edge)
+    check("the pale edge loses its white", edge[0] > 180 and edge[1] < 40 and edge[2] < 40, edge)
+    check("the interior is untouched", inner == (200, 0, 0, 255), inner)
 else:
     print("  skip knockout (no Pillow)")
 

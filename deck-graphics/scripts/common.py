@@ -133,4 +133,27 @@ def knockout_white(png_bytes, thresh=24):
         if a > 0 and min(r, g, b_) >= 255 - thresh:
             ImageDraw.floodfill(im, xy, (0, 0, 0, 0), thresh=thresh); done = True
     if not done: return png_bytes, False
+    defringe(im)
     buf = io.BytesIO(); im.save(buf, "PNG"); return buf.getvalue(), True
+
+def defringe(im, ring=2):
+    """After a white knockout the anti-aliased edge is still there: pixels that were the mark
+    blended with white, now sitting against a dark slide as a pale halo. For the opaque
+    pixels within `ring` px of the transparent ground, read the whiteness as missing
+    coverage — a pixel that is mostly white is mostly background — turn it into alpha, and
+    un-blend the color so what's left is the mark's color, not the mark's color plus white.
+    Only the ring is touched; the interior of a pale mark is left alone."""
+    from PIL import ImageFilter
+    a = im.getchannel("A")
+    near = a.filter(ImageFilter.MinFilter(2 * ring + 1))   # 0 where any pixel within `ring` is transparent
+    px, ap, npx = im.load(), a.load(), near.load()
+    w, h = im.size
+    for y in range(h):
+        for x in range(w):
+            if ap[x, y] == 0 or npx[x, y] != 0: continue
+            r, g, b, _ = px[x, y]
+            cov = 1.0 - min(r, g, b) / 255.0          # how much of this pixel is the mark
+            if cov >= 0.98: continue
+            if cov <= 0.05: px[x, y] = (0, 0, 0, 0); continue
+            un = lambda c: max(0, min(255, int(round((c - 255 * (1 - cov)) / cov))))
+            px[x, y] = (un(r), un(g), un(b), int(round(255 * cov)))
