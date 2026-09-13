@@ -25,13 +25,30 @@ def find_config(start=None, explicit=None):
         if (d / CONFIG_NAME).is_file(): return d / CONFIG_NAME
     return None
 
+def find_brand(start=None):
+    for d in walk_up(start or Path.cwd()):
+        if (d / "brand.json").is_file(): return d / "brand.json"
+    return None
+
 def load_config(start=None, explicit=None):
     """The config with style ref paths resolved against the config file's folder, and a
-    `none` style always present. Without a config file you get `none` and nothing else."""
-    path = find_config(start, explicit)
-    if not path or not path.is_file():
-        return {"_path": None, "styles": {"none": dict(NONE_STYLE)}}
-    cfg = json.loads(path.read_text())
+    `none` style always present. Without a config file you get `none` and nothing else.
+
+    Where it comes from, first match wins: --config or $DECKGRAPHICS_CONFIG; the `graphics`
+    section of the first brand.json walking up (the one brand file shared with deck-builder);
+    the first .deckgraphics.json walking up (the older standalone file)."""
+    path = None
+    if not explicit and not os.environ.get("DECKGRAPHICS_CONFIG"):
+        brand = find_brand(start)
+        if brand:
+            section = json.loads(brand.read_text()).get("graphics")
+            if isinstance(section, dict):
+                cfg = dict(section); path = brand
+    if path is None:
+        path = find_config(start, explicit)
+        if not path or not path.is_file():
+            return {"_path": None, "styles": {"none": dict(NONE_STYLE)}}
+        cfg = json.loads(path.read_text())
     cfg.setdefault("styles", {})
     for name, st in cfg["styles"].items():
         st.setdefault("preamble", ""); st.setdefault("aspect", "1:1")

@@ -54,6 +54,21 @@ check("--config wins", explicit["_path"] == str(root / ".deckgraphics.json"))
 check("prompt = preamble + prompt", imagegen.build_prompt(cfg["styles"]["prop"], "a whistle") == "Glossy chrome. a whistle")
 check("prompt with `none` is the prompt", imagegen.build_prompt(cfg["styles"]["none"], "a whistle") == "a whistle")
 
+# ── brand.json, the file shared with deck-builder ───────────────────────────
+print("brand.json")
+shared = Path(tempfile.mkdtemp(prefix="deckgfx-brand-")).resolve()
+(shared / "brand.json").write_text(json.dumps({"name": "Acme", "graphics": {"default_style": "hero", "styles": {
+    "hero": {"preamble": "Matte clay.", "refs": ["art/one.png"], "aspect": "16:9"}}}}))
+(shared / ".deckgraphics.json").write_text(json.dumps({"default_style": "old", "styles": {"old": {"preamble": "x"}}}))
+(shared / "decks" / "t").mkdir(parents=True)
+bcfg = common.load_config(shared / "decks" / "t")
+check("brand.json › graphics wins over .deckgraphics.json", bcfg["_path"] == str(shared / "brand.json") and "hero" in bcfg["styles"] and "old" not in bcfg["styles"], bcfg.get("_path"))
+check("brand.json refs resolve against brand.json's folder", bcfg["styles"]["hero"]["refs"][0] == str(shared / "art" / "one.png"), bcfg["styles"]["hero"]["refs"])
+check("brand.json default_style is read", bcfg.get("default_style") == "hero")
+(shared / "brand.json").write_text(json.dumps({"name": "Acme"}))
+check("brand.json without graphics falls back to .deckgraphics.json", "old" in common.load_config(shared / "decks" / "t")["styles"])
+check("--config still wins over brand.json", common.load_config(shared, explicit=root / ".deckgraphics.json")["_path"] == str(root / ".deckgraphics.json"))
+
 # ── env ─────────────────────────────────────────────────────────────────────
 print("env")
 w(".env", "DECKGFX_TEST_A=from-file\n# comment\nDECKGFX_TEST_B='quoted'\n")
