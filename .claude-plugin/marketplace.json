@@ -19,6 +19,13 @@
       "author": { "name": "Jared Waxman" }
     },
     {
+      "name": "deck-graphics",
+      "displayName": "Deck Graphics",
+      "source": "./deck-graphics",
+      "description": "Fill a deck's graphics from a manifest: logos through a Brandfetch → SimpleIcons → favicon chain, on-style props through an image model (OpenRouter or fal.ai) with your own illustrations as references, app-screen mocks through headless Chrome. Every file gets a sidecar saying where it came from. Assets and sidecars only; bring your own deck builder.",
+      "author": { "name": "Jared Waxman" }
+    },
+    {
       "name": "slop-check",
       "displayName": "Slop Check",
       "source": {

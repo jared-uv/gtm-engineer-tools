@@ -1,0 +1,17 @@
+{
+  "_about": "Styles for the deck-graphics plugin. Put this at your repo root; the scripts find it by walking up from the manifest. A style is a prompt preamble plus reference images (paths relative to this file) that the model is asked to match. Keys come from a .env beside this file: OPENROUTER_API_KEY, FAL_KEY, BRANDFETCH_CLIENT_ID.",
+  "chrome": null,
+  "default_style": "prop",
+  "styles": {
+    "prop": {
+      "preamble": "A single 3D object rendered in the material, lighting and camera of the reference images exactly, floating centered on a flat dark background. No text, no letters, no logos, no watermark, no people.",
+      "refs": ["brand/illustrations/one.png", "brand/illustrations/two.png"],
+      "aspect": "1:1"
+    },
+    "flat": {
+      "preamble": "Flat, minimal illustration on a dark background, one accent color, no gradients, no text, no watermark.",
+      "refs": [],
+      "aspect": "1:1"
+    }
+  }
+}

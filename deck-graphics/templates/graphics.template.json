@@ -1,0 +1,15 @@
+{
+  "_about": "One entry per graphic in the deck. Keys starting with _ are notes. The deck builder reads `file` per entry and decides what to do when it is missing. Fill with: python3 deckgraphics.py fill <this file>.",
+  "_assets_dir": "assets/generated",
+
+  "s02-vendor":     {"slide": 2, "kind": "logo",      "domain": "clay.com", "type": "icon", "file": "assets/generated/logo-clay.png"},
+  "s02-pinned":     {"slide": 2, "kind": "logo",      "domain": "calendar.google.com", "url": "https://upload.wikimedia.org/wikipedia/commons/a/a5/Google_Calendar_icon_%282020%29.svg", "file": "assets/generated/logo-googlecalendar.png"},
+
+  "s03-hero":       {"slide": 3, "kind": "generated", "style": "prop", "prompt": "a stadium t-shirt cannon, mid-fire, a rolled-up t-shirt leaving the barrel", "file": "assets/generated/cannon.png"},
+
+  "s04-app":        {"slide": 4, "kind": "mock",      "template": "mocks/inbox.html", "file": "assets/generated/mock-inbox.png"},
+
+  "s05-tools":      {"slide": 5, "kind": "logo-row",  "domains": ["clay.com", "lemlist.com", "openclaw.ai"], "prefer": {"openclaw.ai": "favicon"}},
+
+  "s06-real":       {"slide": 6, "kind": "screenshot", "file": "assets/generated/shot-dashboard.png", "brief": "the live dashboard, cropped to the chart, no customer names"}
+}

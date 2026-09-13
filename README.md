@@ -15,6 +15,7 @@ Then install what you want:
 ```
 /plugin install reply-queue
 /plugin install automerge
+/plugin install deck-graphics
 /plugin install slop-check
 ```
 
@@ -38,13 +39,23 @@ Installs a scheduled workflow that squash-merges any open PR at least 15 minutes
 
 One script, three idempotent steps, and one PR you merge by hand at the end — GitHub only runs scheduled workflows from the default branch, so it can't merge itself in.
 
+### `deck-graphics`
+
+A talk needs thirty small graphics: a dozen vendor logos, a handful of icons in the house style, three screenshots that show an app without showing a customer. This fills them from a manifest. Logos come through a chain that degrades instead of failing (Brandfetch, then SimpleIcons, then Google's favicon service, or a URL or file you pin when the chain gets a mark wrong). Props come through an image model with your existing illustrations passed as references, so the new ones match. Mocks are HTML you control, rendered through headless Chrome. Every file gets a sidecar saying which tier or which model, prompt and seed produced it.
+
+The scripts are the cheap part. `/deck-graphics:fill` then looks at every PNG and judges it: does it read at slide size, does it match the references, is there text baked in, is the logo on a transparent ground, is it the right mark. That look is what makes the result trustworthy.
+
+Assets and sidecars only. The deck builder is yours, because that's where the house style lives. Needs an OpenRouter key for props, a free Brandfetch client ID for real logos, and Chrome.
+
+[Full documentation →](./deck-graphics/)
+
 ### `slop-check`
 
 Flags AI writing tells in outward-facing prose before it's sent or published. Warns, never blocks, because a gate that fires on a judgement call gets bypassed, and rewriting prose until a regex goes quiet produces text that passes and still reads like a chatbot.
 
 Lives in [its own repo](https://github.com/le0li0n/slop-check) with its 382-document human corpus and its attribution chain. Listed here so one marketplace covers the set.
 
-## Why these three
+## Why these four
 
 They're the parts of one person's stack that turned out to be portable. The context layer underneath them — a git repo per company holding positioning, clients, deals and call transcripts, which every agent reads before acting — is the part that matters most and the part nobody can hand you.
 
@@ -52,4 +63,4 @@ These are what sits on top of it.
 
 ## Licence
 
-MIT for `reply-queue` and `automerge`. `slop-check` carries its own chain — CC BY-SA 4.0, built on [blader/humanizer](https://github.com/blader/humanizer) (MIT) and Wikipedia's [Signs of AI writing](https://en.wikipedia.org/wiki/Wikipedia:Signs_of_AI_writing).
+MIT for `reply-queue`, `automerge` and `deck-graphics`. `slop-check` carries its own chain — CC BY-SA 4.0, built on [blader/humanizer](https://github.com/blader/humanizer) (MIT) and Wikipedia's [Signs of AI writing](https://en.wikipedia.org/wiki/Wikipedia:Signs_of_AI_writing).
