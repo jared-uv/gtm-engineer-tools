@@ -1,0 +1,6 @@
+{
+  "name": "always-worktree",
+  "version": "0.2.0",
+  "description": "Stops edits on the default branch until the session moves to a worktree. Blocks Write and Edit and Bash that looks like a write, and gets out of the way with one command when you mean it.",
+  "author": { "name": "Jared Waxman" }
+}

@@ -26,6 +26,13 @@
       "author": { "name": "Jared Waxman" }
     },
     {
+      "name": "always-worktree",
+      "displayName": "Always Worktree",
+      "source": "./always-worktree",
+      "description": "Keeps an agent off your default branch. Write and Edit on main are refused with the fix in the message, Bash that looks like a write is refused too, and /always-worktree:main-ok lifts it for four hours when you mean it.",
+      "author": { "name": "Jared Waxman" }
+    },
+    {
       "name": "slop-check",
       "displayName": "Slop Check",
       "source": {
