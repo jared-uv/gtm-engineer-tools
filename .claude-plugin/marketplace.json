@@ -33,6 +33,27 @@
       "author": { "name": "Jared Waxman" }
     },
     {
+      "name": "canonical",
+      "displayName": "Canonical",
+      "source": "./canonical",
+      "description": "A registry of where each kind of company information lives, who owns it, how it is governed and when it was last reviewed. One command answers 'where does X live'; another lists what nobody has looked at lately.",
+      "author": { "name": "Jared Waxman" }
+    },
+    {
+      "name": "permissions",
+      "displayName": "Permissions",
+      "source": "./permissions",
+      "description": "Paths only named people may change. A short table of path rules, plus every governed row of CANONICAL.md, enforced as a hook in Claude sessions, a pre-commit check, and a generated CODEOWNERS. Two outcomes on a miss: block, or propose via a hold-labelled PR.",
+      "author": { "name": "Jared Waxman" }
+    },
+    {
+      "name": "forbidden",
+      "displayName": "Forbidden",
+      "source": "./forbidden",
+      "description": "A registry of information that must never enter the repo, and where each kind goes instead. Objective patterns block; heuristics ask. Runs as a hook on every write and as a pre-commit check.",
+      "author": { "name": "Jared Waxman" }
+    },
+    {
       "name": "slop-check",
       "displayName": "Slop Check",
       "source": {

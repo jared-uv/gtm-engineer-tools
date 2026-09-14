@@ -1,0 +1,6 @@
+{
+  "name": "permissions",
+  "version": "0.2.1",
+  "description": "Paths only named people may change. A short table of path rules, plus every governed row of CANONICAL.md, enforced as a hook in Claude sessions, a pre-commit check, and a generated CODEOWNERS. Two outcomes on a miss: block, or propose via a hold-labelled PR.",
+  "author": { "name": "Jared Waxman" }
+}
