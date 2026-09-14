@@ -16,6 +16,7 @@ Then install what you want:
 /plugin install reply-queue
 /plugin install automerge
 /plugin install deck-graphics
+/plugin install always-worktree
 /plugin install slop-check
 ```
 
@@ -49,13 +50,23 @@ Assets and sidecars only. The deck builder is yours, because that's where the ho
 
 [Full documentation →](./deck-graphics/)
 
+### `always-worktree`
+
+Keeps an agent off your default branch. A session opens in the main checkout on `main`, the first edit lands there, and by the time anyone notices there are six commits on `main` that should have been a PR. Or two sessions open in the same checkout and edit the same files.
+
+On the default branch, Write and Edit are refused with a message naming the fix: move to a worktree. Bash commands that look like writes (a redirect, a heredoc, `sed -i`, `git commit`) are refused too, and reads pass. Each prompt also gets a line telling the agent where it is, so it usually moves before it tries to edit.
+
+When you do mean to work on `main`, `/always-worktree:main-ok` allows it for four hours and then expires. It runs when you ask for it, never because the guard fired. Needs Python 3.
+
+[Full documentation →](./always-worktree/)
+
 ### `slop-check`
 
 Flags AI writing tells in outward-facing prose before it's sent or published. Warns, never blocks, because a gate that fires on a judgement call gets bypassed, and rewriting prose until a regex goes quiet produces text that passes and still reads like a chatbot.
 
 Lives in [its own repo](https://github.com/le0li0n/slop-check) with its 382-document human corpus and its attribution chain. Listed here so one marketplace covers the set.
 
-## Why these four
+## Why these five
 
 They're the parts of one person's stack that turned out to be portable. The context layer underneath them — a git repo per company holding positioning, clients, deals and call transcripts, which every agent reads before acting — is the part that matters most and the part nobody can hand you.
 
@@ -63,4 +74,4 @@ These are what sits on top of it.
 
 ## Licence
 
-MIT for `reply-queue`, `automerge` and `deck-graphics`. `slop-check` carries its own chain — CC BY-SA 4.0, built on [blader/humanizer](https://github.com/blader/humanizer) (MIT) and Wikipedia's [Signs of AI writing](https://en.wikipedia.org/wiki/Wikipedia:Signs_of_AI_writing).
+MIT for `reply-queue`, `automerge`, `deck-graphics` and `always-worktree`. `slop-check` carries its own chain — CC BY-SA 4.0, built on [blader/humanizer](https://github.com/blader/humanizer) (MIT) and Wikipedia's [Signs of AI writing](https://en.wikipedia.org/wiki/Wikipedia:Signs_of_AI_writing).
