@@ -17,6 +17,9 @@ Then install what you want:
 /plugin install automerge
 /plugin install deck-graphics
 /plugin install always-worktree
+/plugin install canonical
+/plugin install permissions
+/plugin install forbidden
 /plugin install slop-check
 ```
 
@@ -60,13 +63,37 @@ When you do mean to work on `main`, `/always-worktree:main-ok` allows it for fou
 
 [Full documentation →](./always-worktree/)
 
+### `canonical`
+
+An agent asked for current positioning reads a six-year-old deck in Drive, because nothing told it where to look first or when to stop. `CANONICAL.md` is a short table that says, for each kind of company information, where it lives in the order to look, who owns it, and when someone last confirmed it.
+
+`/canonical:where positioning` answers from the table. `--stale` lists the rows whose owner hasn't re-confirmed them on schedule, and `--check` validates the file. `/canonical:setup` writes the template and fills it in with you one row at a time, then adds the line to `CLAUDE.md` that makes every session read it. No hook ships. Needs Python 3.
+
+[Full documentation →](./canonical/)
+
+### `permissions`
+
+Paths only named people may change. Positioning is one person's call, and a signed contract isn't edited by whoever happens to be passing. The rules sit in `PERMISSIONS.md`, and every governed row of a `CANONICAL.md` counts as one too. A miss either refuses the edit or lets it through as a proposal once the rule has been stated, to reach the owner as a PR labelled `hold`.
+
+Enforced three ways: a hook on Claude's writes, a pre-commit check if you wire it in, and a `CODEOWNERS` file that `/permissions:codeowners` generates from the same rules. Identity is whatever git config says, so it catches the honest mistake and stops nobody determined. Needs Python 3.
+
+[Full documentation →](./permissions/)
+
+### `forbidden`
+
+Secret scanners know keys. They don't know that a customer list belongs in the CRM, or that a raw export is fine in one folder and a leak in another. `FORBIDDEN.md` lists what never enters the repo and, for each kind, where it goes instead.
+
+Objective patterns refuse the write and name the right place in the message: a card number that passes Luhn, a key with a known prefix, a PEM header with key material after it. Heuristics, such as twenty-five email addresses in one file, turn the write into a question you answer. Each detector checks more than a regex, so `sk-ant-xxxx` in a setup guide goes through. Nothing is checked in a repo until `/forbidden:init` has written the registry. Needs Python 3.
+
+[Full documentation →](./forbidden/)
+
 ### `slop-check`
 
 Flags AI writing tells in outward-facing prose before it's sent or published. Warns, never blocks, because a gate that fires on a judgement call gets bypassed, and rewriting prose until a regex goes quiet produces text that passes and still reads like a chatbot.
 
 Lives in [its own repo](https://github.com/le0li0n/slop-check) with its 382-document human corpus and its attribution chain. Listed here so one marketplace covers the set.
 
-## Why these five
+## Why these eight
 
 They're the parts of one person's stack that turned out to be portable. The context layer underneath them — a git repo per company holding positioning, clients, deals and call transcripts, which every agent reads before acting — is the part that matters most and the part nobody can hand you.
 
@@ -74,4 +101,4 @@ These are what sits on top of it.
 
 ## Licence
 
-MIT for `reply-queue`, `automerge`, `deck-graphics` and `always-worktree`. `slop-check` carries its own chain — CC BY-SA 4.0, built on [blader/humanizer](https://github.com/blader/humanizer) (MIT) and Wikipedia's [Signs of AI writing](https://en.wikipedia.org/wiki/Wikipedia:Signs_of_AI_writing).
+MIT for `reply-queue`, `automerge`, `deck-graphics`, `always-worktree`, `canonical`, `permissions` and `forbidden`. `slop-check` carries its own chain — CC BY-SA 4.0, built on [blader/humanizer](https://github.com/blader/humanizer) (MIT) and Wikipedia's [Signs of AI writing](https://en.wikipedia.org/wiki/Wikipedia:Signs_of_AI_writing).

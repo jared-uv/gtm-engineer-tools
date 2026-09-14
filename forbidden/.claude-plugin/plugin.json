@@ -1,0 +1,6 @@
+{
+  "name": "forbidden",
+  "version": "0.2.0",
+  "description": "A registry of information that must never enter the repo, and where each kind goes instead. Objective patterns block; heuristics ask. Runs as a hook on every write and as a pre-commit check.",
+  "author": { "name": "Jared Waxman" }
+}

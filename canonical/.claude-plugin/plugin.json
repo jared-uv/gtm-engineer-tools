@@ -1,0 +1,6 @@
+{
+  "name": "canonical",
+  "version": "0.2.0",
+  "description": "A registry of where each kind of company information lives, who owns it, how it is governed and when it was last reviewed. One command answers 'where does X live'; another lists what nobody has looked at lately.",
+  "author": { "name": "Jared Waxman" }
+}
