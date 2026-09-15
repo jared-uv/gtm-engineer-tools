@@ -98,21 +98,46 @@ Do not nudge anyone whose sequence still has steps pending. The sequencer will.
 
 The first run of the day posts a header: how many cards went up since yesterday's, and how many from the last 7 days are still unticked. Other runs post only new cards, and nothing at all if there are none.
 
-The card, top to bottom, every line present:
+The card, top to bottom, every line present. **Which of the two shapes you use depends on whether a draft object exists** — that is the only thing that decides it.
 
-```
+**Shape A — the draft is in the mailbox.** The primary path: a mail campaign with the mailbox connected. The body already lives in Gmail and the card links straight to it, so **the card does not repeat the body in a fenced block.** One preview line, quoted, and the link does the rest.
+
+````
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 *<https://www.linkedin.com/in/slug|First Last>* · Title, Company · email@address
 Campaign: example-outbound
 *Reply* · 5 days since their message          ← or  *Nudge* · 9 days since your message
 > "what they said, one line, their words"
 
-Send from: LinkedIn (or the sequencer inbox)  ← or  Draft is in your Gmail: <link>
-```<the message>```
+Draft is in your Gmail: <link>
+> _Great, thanks. Here's the concrete ask: a short quote on…_
+
 Notes: what the playbook says happens after the send; the tag; the lead to end; the thing that's your call.
+````
+
+**Shape B — there is no draft object.** LinkedIn, most sequencer inboxes. The card has to carry the text itself, and only here does a fenced block earn its place, because the point is copying it out cleanly.
+
+````
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+*<https://www.linkedin.com/in/slug|First Last>* · Title, Company
+Campaign: example-manual
+*Reply* · 5 days since their message
+> "what they said, one line, their words"
+
+Send from: LinkedIn
+```
+<the message, hard-wrapped at ~90 characters>
 ```
 
-**Three chat-rendering rules, all learned the hard way.** The card opens with a rule line (`━` × 30) so the eye can find where one person ends and the next begins. The quote line is **followed by a blank line** — Slack keeps a `>` blockquote running until it hits one, and without it "Send from" and "Notes" render inside the quote as if the person had said them. And **both fences sit on their own lines**: newline, opening ```, the message, newline, closing ``` alone, blank line, then Notes. A closing fence glued to a signature means the block never closes and Notes renders as code with a scrollbar. Keep message lines under ~100 characters too; code blocks don't wrap.
+Notes: the tag; the lead to end; the thing that's your call.
+````
+
+**Four chat-rendering rules, all learned the hard way.**
+
+1. The card opens with a rule line (`━` × 30) so the eye can find where one person ends and the next begins.
+2. The quote line is **followed by a blank line.** Slack keeps a `>` blockquote running until it hits one, and without it "Draft is in your Gmail" and "Notes" render inside the quote as if the person had said them.
+3. **Never fence a body the card already links.** Slack code blocks do not wrap, so an email paragraph becomes a horizontal scrollbar and the card is harder to read than the draft it is advertising. A mail draft gets Shape A, always.
+4. When a fence is used at all, **the opening and closing fences each sit alone on their own line** — newline, opening fence, the message, newline, closing fence alone, blank line, then Notes. Putting the opening fence, the message and the closing fence on a single line is the specific mistake to avoid: the block never closes, the signature swallows the fence, and Notes renders as code with a scrollbar. **Hard-wrap fenced lines at ~90 characters.**
 
 Line by line:
 
@@ -120,13 +145,13 @@ Line by line:
 - **Campaign** is the registry slug the reply's own campaign id maps to.
 - **Reply / Nudge / Hand**, then the count. For a reply, days since *their* last message; for a nudge, days since *yours*. Whole days, from `date -u`.
 - **What they said**, quoted, one line, cut to the point. For a nudge, the last thing you sent instead.
-- **Send from** is the channel they replied on — or, for the connected mailbox, a link straight to the draft.
-- **The message**, fenced. When the playbook says surface rather than draft, the block holds the one-line question for you instead, and Notes says why there's no draft.
+- **Send from** is the channel they replied on. For the connected mailbox it becomes "Draft is in your Gmail" plus a link straight to the draft, and the card is Shape A.
+- **The message.** In Shape A it is one quoted preview line, because the body is a click away and a fenced copy of it only adds a scrollbar. In Shape B it is the whole message, fenced, because there is nowhere else to get it. When the playbook says surface rather than draft, the card carries the one-line question for you instead, and Notes says why there's no draft.
 - **Notes** carries the bookkeeping: the tag, the lead to end, the record to reconcile.
 
-**Hand actions with no message** get their own short card in the same shape, reading *Hand*, with no message block.
+**Hand actions with no message** get their own short card, reading *Hand*. Shape A without the draft link, since there is nothing to draft and nothing to copy.
 
-**A thread reply from you is an instruction.** While reading the surface back, check every card from the last 7 days that has replies. If the last message in the thread is yours and the card isn't ticked, treat it as feedback on the draft: shorter, different tone, a fact you're adding, or an answer to a your-call line. Rewrite with that in it, re-read the source thread if the note changes what the person is being answered about, and post the revised draft **as a reply in that thread**, same fenced block, one line above saying what changed. Don't post a new card and don't touch the original. If the note is a question answerable from the repo, answer it in the thread; if it needs something you can't see, say so rather than guessing. A thread whose last message is yours is waiting on them; leave it.
+**A thread reply from you is an instruction.** While reading the surface back, check every card from the last 7 days that has replies. If the last message in the thread is yours and the card isn't ticked, treat it as feedback on the draft: shorter, different tone, a fact you're adding, or an answer to a your-call line. Rewrite with that in it, re-read the source thread if the note changes what the person is being answered about, and post the revised draft **as a reply in that thread**, one line above saying what changed. A Shape A draft is rewritten in the mailbox and the thread reply just says so; only a Shape B message is pasted into the thread, fenced, under the same rules. Don't post a new card and don't touch the original. If the note is a question answerable from the repo, answer it in the thread; if it needs something you can't see, say so rather than guessing. A thread whose last message is yours is waiting on them; leave it.
 
 This is a timed loop, not a conversation — the reply arrives on the next run. For anything faster, use a session.
 
