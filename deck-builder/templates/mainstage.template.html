@@ -1,0 +1,78 @@
+<!doctype html>
+<!--
+  Mainstage template: one or two graphics and no more than five words a slide. The presenter
+  speaks the leave-behind's words; the speaker notes carry them verbatim.
+  Its partner is leave-behind.template.html — same slide count, same order, same data-label.
+
+  Word counting: text inside [data-placeholder] (a brief of what graphic goes there) and inside
+  [data-words="exempt"] (diagram labels, such as the names in a stack or the times on a clock)
+  does not count toward the limit.
+
+  A deck folder holds: deck.json, the leave-behind, this file (renamed, e.g. talk-mainstage.html),
+  tokens.css, and deck.js.
+  - tokens.css: this starter links a tokens.css next to the file. Point the <link> at your
+    brand's tokens instead (the path in brand.json "tokens_css"), e.g. ../../brand/tokens.css.
+  - deck.js: `init` copies the runtime next to the file. You can also point the <script>
+    at the installed plugin's runtime/deck.js.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Your talk — mainstage</title>
+<link rel="stylesheet" href="tokens.css">
+<script src="deck.js"></script>
+<style>
+  body { background: var(--color-background); }
+  slide-deck > section {
+    background: var(--color-background); color: var(--color-text);
+    font-family: var(--font-body);
+    padding: 120px 140px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 56px;
+    text-align: center;
+  }
+  .w { font-family: var(--font-display); font-weight: var(--font-display-weight); font-size: 150px; line-height: 1;
+       text-transform: uppercase; text-shadow: var(--display-text-shadow); margin: 0; }
+  .accent { color: var(--color-accent); }
+  .placeholder { width: 900px; height: 420px; border: 3px dashed var(--color-muted); border-radius: 20px;
+                 display: flex; align-items: center; justify-content: center; padding: 40px; box-sizing: border-box;
+                 color: var(--color-muted); font-size: 30px; line-height: 1.4; }
+  .pair { display: flex; gap: 80px; }
+  .pair .placeholder { width: 640px; height: 360px; }
+  .label { font-family: var(--font-display); font-weight: var(--font-display-weight); font-size: 44px; margin-top: 20px; color: var(--color-muted); }
+</style>
+</head>
+<body>
+<slide-deck width="1920" height="1080">
+
+  <section data-label="Title">
+    <h1 class="w">Your talk <span class="accent">title.</span></h1>
+  </section>
+
+  <section data-label="The point">
+    <h2 class="w">One point, <span class="accent">plainly.</span></h2>
+    <div class="placeholder" data-placeholder>A graphic that shows the point — one object, no text on it</div>
+  </section>
+
+  <section data-label="Before and after">
+    <h2 class="w">What <span class="accent">changed.</span></h2>
+    <div class="pair">
+      <div><div class="placeholder" data-placeholder>The old way, as a picture</div><div class="label" data-words="exempt">Before</div></div>
+      <div><div class="placeholder" data-placeholder>The new way, as a picture</div><div class="label" data-words="exempt">After</div></div>
+    </div>
+  </section>
+
+  <section data-label="Close">
+    <h2 class="w">Remember <span class="accent">this line.</span></h2>
+  </section>
+
+</slide-deck>
+
+<script type="application/json" id="speaker-notes">
+[
+  "SAY THIS — the leave-behind slide, word for word:\nEvent name · Date\nYour talk title\ngoes here.\nSpeaker name, role, company\n\n— — —\nTEN SECONDS: I'm [name], and in the next [minutes] I'll show you [the one thing].\n\nOpen with who you are and why this talk, in two sentences.",
+  "SAY THIS — the leave-behind slide, word for word:\nThe point\nOne point, said plainly.\nTwo or three sentences that make the point without a presenter in the room. Someone reading this later should get the argument from the slide alone.\n\n— — —\nTEN SECONDS: Here's the point, in one sentence.\n\nMake the point, then give the one example that proves it.",
+  "SAY THIS — the leave-behind slide, word for word:\nWhat changed\nBefore, and after.\nBefore\nHow it used to work\nWhat that cost\nAfter\nHow it works now\nWhat that bought\n\n— — —\nTEN SECONDS: It used to cost us this; now it buys us that.\n\nWalk left to right. The cost on the left is what makes the right side matter.",
+  "SAY THIS — the leave-behind slide, word for word:\nThe one line you want\nremembered.\nWhere to find you · the link to this deck\n\n— — —\nTEN SECONDS: If you remember one thing, make it this line.\n\nSay the line, pause, then point them to where the deck lives."
+]
+</script>
+</body>
+</html>

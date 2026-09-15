@@ -1,0 +1,6 @@
+{
+  "name": "deck-builder",
+  "version": "0.2.0",
+  "description": "Build talks as HTML decks in your own brand, keep a leave-behind and a mainstage version in sync, and export a PDF plus a PowerPoint file that opens editable in Google Slides. Finds the slides an editable rebuild can't reproduce by comparing renders, and lets you choose per slide: editable, editable with effects baked behind, or a picture. Opinionated defaults, every one surfaced and adjustable.",
+  "author": { "name": "Jared Waxman" }
+}

@@ -1,0 +1,81 @@
+<!doctype html>
+<!--
+  Leave-behind template: everything on the slide, reads without a presenter.
+  Its partner is mainstage.template.html — same slide count, same order, same data-label.
+
+  A deck folder holds: deck.json, this file (renamed, e.g. talk.html), the mainstage file,
+  tokens.css, and deck.js.
+  - tokens.css: this starter links a tokens.css next to the file. Point the <link> at your
+    brand's tokens instead (the path in brand.json "tokens_css"), e.g. ../../brand/tokens.css.
+  - deck.js: `init` copies the runtime next to the file. You can also point the <script>
+    at the installed plugin's runtime/deck.js.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Your talk — leave-behind</title>
+<link rel="stylesheet" href="tokens.css">
+<script src="deck.js"></script>
+<style>
+  body { background: var(--color-background); }
+  slide-deck > section {
+    background: var(--color-background); color: var(--color-text);
+    font-family: var(--font-body); font-weight: var(--font-body-weight);
+    padding: 120px 140px; display: flex; flex-direction: column; justify-content: center; gap: 36px;
+  }
+  /* no letter spacing and a bold-or-regular weight: Google Slides can reproduce neither tracking nor 600 */
+  .kicker { font-size: 28px; text-transform: uppercase; color: var(--color-accent); font-weight: 700; }
+  h1, h2 { font-family: var(--font-display); font-weight: var(--font-display-weight); margin: 0; line-height: 1.02;
+           text-shadow: var(--display-text-shadow); }
+  h1 { font-size: 132px; }
+  h2 { font-size: 84px; }
+  p { font-size: 38px; line-height: 1.45; margin: 0; max-width: 1400px; color: var(--color-text); }
+  .muted { color: var(--color-muted); }
+  .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; }
+  .card { background: var(--color-surface); border-radius: 20px; padding: 48px; }
+  .card h3 { font-family: var(--font-display); font-weight: var(--font-display-weight); font-size: 48px; margin: 0 0 20px; }
+  .card ul { margin: 0; padding-left: 1.1em; font-size: 34px; line-height: 1.5; }
+  .accent { color: var(--color-accent); }
+</style>
+</head>
+<body>
+<slide-deck width="1920" height="1080">
+
+  <section data-label="Title">
+    <div class="kicker">Event name · Date</div>
+    <h1>Your talk title<br><span class="accent">goes here.</span></h1>
+    <p class="muted">Speaker name, role, company</p>
+  </section>
+
+  <section data-label="The point">
+    <div class="kicker">The point</div>
+    <h2>One point, said plainly.</h2>
+    <p>Two or three sentences that make the point without a presenter in the room. Someone reading this later should get the argument from the slide alone.</p>
+  </section>
+
+  <section data-label="Before and after">
+    <div class="kicker">What changed</div>
+    <h2>Before, and after.</h2>
+    <div class="cols">
+      <div class="card"><h3>Before</h3><ul><li>How it used to work</li><li>What that cost</li></ul></div>
+      <div class="card"><h3 class="accent">After</h3><ul><li>How it works now</li><li>What that bought</li></ul></div>
+    </div>
+  </section>
+
+  <section data-label="Close">
+    <h2>The one line you want<br><span class="accent">remembered.</span></h2>
+    <p class="muted">Where to find you · the link to this deck</p>
+  </section>
+
+</slide-deck>
+
+<script type="application/json" id="speaker-notes">
+[
+  "Open with who you are and why this talk, in two sentences.",
+  "Make the point, then give the one example that proves it.",
+  "Walk left to right. The cost on the left is what makes the right side matter.",
+  "Say the line, pause, then point them to where the deck lives."
+]
+</script>
+</body>
+</html>

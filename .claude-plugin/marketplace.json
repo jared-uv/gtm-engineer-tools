@@ -22,7 +22,14 @@
       "name": "deck-graphics",
       "displayName": "Deck Graphics",
       "source": "./deck-graphics",
-      "description": "Fill a deck's graphics from a manifest: logos through a Brandfetch → SimpleIcons → favicon chain, on-style props through an image model (OpenRouter or fal.ai) with your own illustrations as references, app-screen mocks through headless Chrome. Every file gets a sidecar saying where it came from. Assets and sidecars only; bring your own deck builder.",
+      "description": "Fill a deck's graphics from a manifest: logos through a Brandfetch → SimpleIcons → favicon chain, on-style props through an image model (OpenRouter or fal.ai) with your own illustrations as references, app-screen mocks through headless Chrome. Every file gets a sidecar saying where it came from. Assets and sidecars only; pairs with deck-builder or any deck builder you already have.",
+      "author": { "name": "Jared Waxman" }
+    },
+    {
+      "name": "deck-builder",
+      "displayName": "Deck Builder",
+      "source": "./deck-builder",
+      "description": "Build a talk as HTML slides in your own brand, keep a stage version and a leave-behind in sync slide for slide, and export a PDF plus a PowerPoint that opens editable in Google Slides. Renders each slide as designed and as an editable copy, names what the copy would lose, and lets you choose per slide: editable, the effect baked in behind the text, or a picture.",
       "author": { "name": "Jared Waxman" }
     },
     {
