@@ -44,11 +44,19 @@ python3 "${CLAUDE_PLUGIN_ROOT}/scripts/deckgraphics.py" fill $ARGUMENTS --dry-ru
    - A logo the chain got wrong: find the right source and pin it with `"url"` on the entry (Wikimedia Commons SVGs cover most household marks), or set `"prefer": "favicon"` when the favicon is the better mark. Re-run with `--only <id> --force`.
    - A mock: edit the HTML template and re-run; the renderer re-renders anything older than its template.
 
-5. **Report.** Run `status` again and give the user the counts, every entry that is still soft (favicon tier, small pixel size, by-hand screenshots) with the reason, and the money spent. Then hand off to whatever builds the deck; this plugin stops at the assets.
+5. **Give the user the same look.** Build the review page and hand it over:
+
+```
+python3 "${CLAUDE_PLUGIN_ROOT}/scripts/deckgraphics.py" sheet $ARGUMENTS
+```
+
+   One page, every graphic grouped by key prefix, `note` and sidecar under each. Add `--embed` when it has to travel (a link, a shared file). When the manifest holds several treatments of one figure (`growth-current`, `growth-rich`, `growth-hybrid`), the sheet is where the user picks; do not pick for them.
+
+6. **Report.** Run `status` again and give the user the counts, every entry that is still soft (favicon tier, small pixel size, by-hand screenshots) with the reason, and the money spent. Then hand off to whatever builds the deck; this plugin stops at the assets.
 
 ## Rules
 
 - Never recolor a brand's own logo. Only the SimpleIcons tier is monochrome, and those are monochrome by design.
 - Never invent a mark. If nothing on the chain is the real logo, say the slot is soft and leave the best available with its sidecar.
-- Never draw text with the image model.
+- Never draw text with the image model. When a figure needs labels over generated art, make a `mock` whose template embeds the generated PNG and sets the words in HTML; `fill` renders it after the illustration and re-renders it when the illustration changes.
 - Keys stay in `.env`. Never print them, never commit them.

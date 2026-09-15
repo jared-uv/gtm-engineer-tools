@@ -78,6 +78,37 @@ def key(name, tool="deck-graphics"):
         sys.exit(f"{tool}: {name} is not set. Put it in a .env above the manifest (gitignored), or export it.")
     return v
 
+# ── mock inputs ─────────────────────────────────────────────────────────────
+IMG_EXT = (".png", ".jpg", ".jpeg", ".webp", ".svg", ".gif")
+
+def mock_inputs(template):
+    """The local images a mock template draws on: url("…") in its CSS and src="…" in its HTML,
+    resolved against the template's folder. Remote URLs and data: URIs are ignored. A mock that
+    embeds another entry's output (an illustration under real labels, say) depends on it: the
+    mock renders after that entry, and goes stale when the input is newer than the render."""
+    import re
+    t = Path(template)
+    text = t.read_text(errors="replace")
+    refs = [m[1] for m in re.findall(r'''url\((["']?)([^"')]+)\1\)''', text)]
+    refs += re.findall(r'''src=["']([^"']+)["']''', text)
+    out = []
+    for ref in refs:
+        ref = ref.strip()
+        if not ref or "://" in ref or ref.startswith("data:") or not ref.lower().endswith(IMG_EXT): continue
+        p = (t.parent / ref).resolve()
+        if p not in out: out.append(p)
+    return out
+
+def mock_stale(template, out):
+    """Why a rendered mock needs re-rendering, or None: missing, template newer, or an input newer."""
+    template, out = Path(template), Path(out)
+    if not out.is_file(): return "missing"
+    t = out.stat().st_mtime
+    if template.stat().st_mtime > t: return "template changed"
+    for p in mock_inputs(template):
+        if p.is_file() and p.stat().st_mtime > t: return f"input changed: {p.name}"
+    return None
+
 # ── chrome ──────────────────────────────────────────────────────────────────
 CHROME_CANDIDATES = [
     "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",

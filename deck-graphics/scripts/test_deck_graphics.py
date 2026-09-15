@@ -195,6 +195,69 @@ if HAVE_PIL:
 else:
     print("  skip knockout (no Pillow)")
 
+# ── mocks that draw on other entries ────────────────────────────────────────
+print("mock inputs")
+tpl = w("decks/x/mocks/hybrid.html",
+        '<html><style>html,body{margin:0;width:800px;height:400px}'
+        '.illo{background:url("../assets/generated/icon-whistle.png") center/cover}'
+        '.remote{background:url(https://example.com/x.png)}</style>'
+        '<img src="logo.png"><img src="data:image/png;base64,AAAA"><img src="../brand/vendor.png"></html>')
+ins = common.mock_inputs(tpl)
+check("css url() and html src are found", (root / "decks/x/assets/generated/icon-whistle.png").resolve() in ins and (root / "decks/x/mocks/logo.png").resolve() in ins, ins)
+check("remote and data: refs are ignored", len(ins) == 3, ins)
+check("inputs need not exist yet", all(True for _ in ins))
+dep = dict(good); dep["a-hybrid"] = {"kind": "mock", "template": "mocks/hybrid.html", "file": "assets/generated/mock-hybrid.png"}
+man3 = w("decks/x/deps.json", json.dumps(dep))
+r = run("fill", man3, "--dry-run")
+lines = [l for l in r.stdout.splitlines() if "would" in l]
+gen_i = next(i for i, l in enumerate(lines) if "a-gen" in l); hy_i = next(i for i, l in enumerate(lines) if "a-hybrid" in l); mock_i = next(i for i, l in enumerate(lines) if "a-mock" in l)
+check("mocks are planned after everything else", gen_i < mock_i and gen_i < hy_i, "\n".join(lines))
+check("a mock says which input it waits for", "after icon-whistle.png" in lines[hy_i], lines[hy_i])
+check("an independent mock is just rendered", "(" not in lines[mock_i].split("→")[0].split("render")[1], lines[mock_i])
+# staleness: render exists but an input is newer
+import time as _t
+outp = root / "decks/x/assets/generated/mock-hybrid.png"; outp.write_bytes(b"\x89PNG\r\n\x1a\n" + b"\x00" * 16)
+old = _t.time() - 600; os.utime(outp, (old, old)); os.utime(tpl, (old - 60, old - 60))
+inp = root / "decks/x/assets/generated/icon-whistle.png"; inp.write_bytes(b"\x89PNG\r\n\x1a\n" + b"\x00" * 16)
+vend = root / "decks/x/brand/vendor.png"
+if vend.is_file(): os.utime(vend, (old - 120, old - 120))   # left by the pinned-file test; older than the render
+check("stale when an input is newer", (common.mock_stale(tpl, outp) or "").startswith("input changed"), common.mock_stale(tpl, outp))
+os.utime(inp, (old - 120, old - 120))
+check("fresh when render is newest", common.mock_stale(tpl, outp) is None, common.mock_stale(tpl, outp))
+os.utime(tpl, (old + 60, old + 60))
+check("stale when the template is newer", common.mock_stale(tpl, outp) == "template changed", common.mock_stale(tpl, outp))
+os.utime(tpl, (old - 60, old - 60))
+r = run("fill", man3, "--dry-run")
+check("a fresh mock is kept, not re-planned", "a-hybrid" in r.stdout.split("to fill")[0] and "keep" in r.stdout, r.stdout)
+inp.unlink(); outp.unlink()
+
+# ── check: aspect note ──────────────────────────────────────────────────────
+print("check aspect")
+asp = dict(good); asp["a-wide"] = {"kind": "generated", "style": "prop", "prompt": "x", "file": "assets/generated/wide.png", "aspect": "2:1"}
+r = run("check", w("decks/x/aspect.json", json.dumps(asp)))
+check("an unsupported aspect is a note, not a problem", r.returncode == 0 and "note: a-wide: aspect '2:1'" in r.stdout and "0 problems" in r.stdout, r.stdout)
+check("a supported aspect is silent", "note: a-gen" not in r.stdout)
+
+# ── sheet ───────────────────────────────────────────────────────────────────
+print("sheet")
+noted = dict(good); noted["a-logo"] = {**good["a-logo"], "note": "the mark, not the wordmark"}
+noted["growth-current"] = {"kind": "mock", "template": "mocks/inbox.html", "file": "assets/generated/g1.png"}
+noted["growth-rich"] = {"kind": "mock", "template": "mocks/inbox.html", "file": "assets/generated/g2.png"}
+man4 = w("decks/x/sheet.json", json.dumps(noted))
+r = run("sheet", man4)
+sheet = root / "decks/x/sheet.html"
+check("sheet is written beside the manifest", sheet.is_file() and "wrote" in r.stdout, r.stdout + r.stderr)
+s = sheet.read_text()
+check("groups by the prefix before the last hyphen", "<h2>growth</h2>" in s and "<h2>a</h2>" in s, s[:400])
+check("present images are referenced relatively", 'src="assets/generated/logo-clay.png"' in s, s)
+check("missing ones say so", "not produced" in s)
+check("the note is shown", "the mark, not the wordmark" in s)
+check("the sidecar is summarized", "favicon, white ground removed" in s)
+check("a logo-row groups under the row, one card per domain", "<h2>a-row</h2>" in s and "<b>calendar.google.com</b>" in s, s)
+r = run("sheet", man4, "--embed", "--out", root / "decks/x/portable.html")
+s2 = (root / "decks/x/portable.html").read_text()
+check("--embed inlines the image", 'src="data:image/' in s2 and 'src="assets/' not in s2, r.stdout + r.stderr)
+
 # ── init ────────────────────────────────────────────────────────────────────
 print("init")
 fresh = Path(tempfile.mkdtemp(prefix="deckgfx-init-"))

@@ -1,6 +1,6 @@
 {
   "name": "deck-graphics",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Fill a deck's graphics from a manifest: logos through a Brandfetch → SimpleIcons → favicon chain, on-style props through an image model (OpenRouter or fal.ai), app-screen mocks through headless Chrome. Every file gets a sidecar recording where it came from. Assets and sidecars only; bring your own deck builder.",
   "author": { "name": "Jared Waxman" }
 }
