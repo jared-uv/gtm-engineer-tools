@@ -16,6 +16,7 @@ Then install what you want:
 /plugin install reply-queue
 /plugin install automerge
 /plugin install deck-graphics
+/plugin install deck-builder
 /plugin install always-worktree
 /plugin install canonical
 /plugin install permissions
@@ -49,9 +50,19 @@ A talk needs thirty small graphics: a dozen vendor logos, a handful of icons in 
 
 The scripts are the cheap part. `/deck-graphics:fill` then looks at every PNG and judges it: does it read at slide size, does it match the references, is there text baked in, is the logo on a transparent ground, is it the right mark. That look is what makes the result trustworthy.
 
-Assets and sidecars only. The deck builder is yours, because that's where the house style lives. Needs an OpenRouter key for props, a free Brandfetch client ID for real logos, and Chrome.
+Assets and sidecars only. It pairs with `deck-builder`, or with any deck builder you already have, since what it writes is a PNG and a sidecar per graphic. Needs an OpenRouter key for props, a free Brandfetch client ID for real logos, and Chrome.
 
 [Full documentation →](./deck-graphics/)
+
+### `deck-builder`
+
+A talk usually needs two decks. One is for the stage, where a slide full of text splits the room between listening and reading. The other is sent afterwards and has to make sense with nobody presenting it. Kept by hand, they drift within a week. This builds both as HTML slides in your own brand, checks that they still match slide for slide, and writes the stage version's speaker notes from the other one's text.
+
+Then someone asks for the slides in Google Slides so they can edit them. Before exporting, it renders each slide twice, once as designed and once from only what an editable PowerPoint can hold, and compares the two. Where they differ it names the slides and the reason (a glow on a headline, letter spacing Google Slides drops, a font it doesn't have), and you choose per slide: editable, editable with the effect baked into a picture behind the text, or a picture of the slide. The PDF keeps everything.
+
+Every default, two versions and five words on a stage slide included, is printed at the start of a build and can be changed or switched off. It ships no brand: one `brand.json` points at your design system, and deck-graphics reads the same file. Needs Python 3.9+, Chrome, and `pillow` and `python-pptx` for the check and the PowerPoint.
+
+[Full documentation →](./deck-builder/)
 
 ### `always-worktree`
 
@@ -93,7 +104,7 @@ Flags AI writing tells in outward-facing prose before it's sent or published. Wa
 
 Lives in [its own repo](https://github.com/le0li0n/slop-check) with its 382-document human corpus and its attribution chain. Listed here so one marketplace covers the set.
 
-## Why these eight
+## Why these nine
 
 They're the parts of one person's stack that turned out to be portable. The context layer underneath them — a git repo per company holding positioning, clients, deals and call transcripts, which every agent reads before acting — is the part that matters most and the part nobody can hand you.
 
@@ -101,4 +112,4 @@ These are what sits on top of it.
 
 ## Licence
 
-MIT for `reply-queue`, `automerge`, `deck-graphics`, `always-worktree`, `canonical`, `permissions` and `forbidden`. `slop-check` carries its own chain — CC BY-SA 4.0, built on [blader/humanizer](https://github.com/blader/humanizer) (MIT) and Wikipedia's [Signs of AI writing](https://en.wikipedia.org/wiki/Wikipedia:Signs_of_AI_writing).
+MIT for `reply-queue`, `automerge`, `deck-graphics`, `deck-builder`, `always-worktree`, `canonical`, `permissions` and `forbidden`. `slop-check` carries its own chain — CC BY-SA 4.0, built on [blader/humanizer](https://github.com/blader/humanizer) (MIT) and Wikipedia's [Signs of AI writing](https://en.wikipedia.org/wiki/Wikipedia:Signs_of_AI_writing).

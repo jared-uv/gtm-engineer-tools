@@ -1,0 +1,8 @@
+{
+  "_about": "One per talk, in the talk's folder next to its two HTML files. `overrides` changes brand.json `decks` settings for this talk only (same keys, e.g. {\"mainstage\": {\"max_words\": 7}}). `slides` is written by the fidelity step: the export treatment chosen per slide, keyed by 1-based slide number as a string, one of \"editable\", \"glow-behind\" or \"picture\". A slide not listed is asked about, or gets the default.",
+  "title": "Your talk",
+  "leave_behind": "talk.html",
+  "mainstage": "talk-mainstage.html",
+  "overrides": {},
+  "slides": {}
+}

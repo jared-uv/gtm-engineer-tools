@@ -1,0 +1,47 @@
+{
+  "_about": "One brand file for both plugins, deck-graphics and deck-builder. Put it at your repo root as brand.json; both plugins find it by walking up from the deck. Every value here is a neutral placeholder: replace it with your own design system. Nothing in this template is anyone's real brand.",
+  "name": "Your Company",
+  "design_system": "Optional. A path or URL to your design system, such as a Claude Design handoff folder. The plugins don't parse it; the skill and people read it for guidance.",
+  "tokens_css": "brand/tokens.css",
+
+  "colors": {
+    "background": "#111418",
+    "surface": "#1B2027",
+    "text": "#F3F4F6",
+    "muted": "#9CA3AF",
+    "accent": "#3B82F6",
+    "accent_2": "#22C55E"
+  },
+
+  "fonts": {
+    "_about": "family is what the HTML decks use. slides_equivalent is the Google Slides font the editable PPTX uses in its place; keep them the same when your font is already in Google Slides.",
+    "display": { "family": "Archivo", "weight": 700, "italic": false, "slides_equivalent": "Archivo" },
+    "body":    { "family": "Inter", "weight": 400, "slides_equivalent": "Inter" },
+    "mono":    { "family": "JetBrains Mono", "slides_equivalent": "Roboto Mono" }
+  },
+
+  "effects": {
+    "_about": "display_text_shadow is a CSS text-shadow for display type, e.g. a glow. null means none. An editable PPTX cannot reproduce it; the fidelity step asks per slide.",
+    "display_text_shadow": null
+  },
+
+  "logo": "brand/logo.svg",
+  "illustrations": [],
+
+  "graphics": {
+    "_about": "Read by deck-graphics. A style is a prompt preamble plus reference images (paths relative to this file) the image model is asked to match.",
+    "chrome": null,
+    "default_style": "flat",
+    "styles": {
+      "flat": {
+        "preamble": "Flat, minimal illustration on a dark background, one accent color, no gradients, no text, no watermark.",
+        "refs": [],
+        "aspect": "1:1"
+      }
+    }
+  },
+
+  "decks": {
+    "_about": "Read by deck-builder. The defaults live in the plugin and are all listed by its `defaults` command. Anything set here overrides them for every deck in the repo; a deck's own deck.json can override again."
+  }
+}

@@ -1,0 +1,20 @@
+/* Brand tokens for the decks. Mirrors brand.json: keep the two in step.
+   Neutral placeholders; replace with your own design system. */
+@import url("https://fonts.googleapis.com/css2?family=Archivo:wght@400;700&family=Inter:wght@400;600;700&family=JetBrains+Mono&display=swap");
+
+:root {
+  --color-background: #111418;
+  --color-surface: #1B2027;
+  --color-text: #F3F4F6;
+  --color-muted: #9CA3AF;
+  --color-accent: #3B82F6;
+  --color-accent-2: #22C55E;
+
+  --font-display: "Archivo", "Inter", system-ui, sans-serif;
+  --font-display-weight: 700;
+  --font-body: "Inter", system-ui, sans-serif;
+  --font-body-weight: 400;
+  --font-mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
+
+  --display-text-shadow: none;
+}
